@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revelación de Género | Brandon & Laura</title>
+    <meta name="description" content="Únete a nosotros para descubrir el género de nuestro bebé en un evento lleno de magia y amor">
+    
+    <!-- Fuentes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                        display: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        primary: {
+                            light: '#F9C5D5',
+                            DEFAULT: '#F2789F',
+                            dark: '#F999B7',
+                        },
+                        secondary: {
+                            light: '#C1E3FF',
+                            DEFAULT: '#90CDF4',
+                            dark: '#63B3ED',
+                        },
+                        accent: '#FFD166',
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'float-reverse': 'float-reverse 7s ease-in-out infinite',
+                        'pulse-slow': 'pulse 5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'spin-slow': 'spin 20s linear infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        'float-reverse': {
+                            '0%, 100%': { transform: 'translateY(-10px)' },
+                            '50%': { transform: 'translateY(10px)' },
+                        },
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <!-- AOS (Animate On Scroll) -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, rgba(242,120,159,0.1) 0%, rgba(144,205,244,0.1) 100%);
+        }
+        
+        .parallax {
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        
+        /* .countdown-item {
+            @apply bg-white bg-opacity-80 rounded-lg shadow-lg p-4 text-center w-20 h-20 flex flex-col justify-center items-center;
+        } */
+         .countdown-item {
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 1rem;
+            text-align: center;
+            width: 5rem;
+            height: 5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        
+        .gender-reveal-container {
+            perspective: 1000px;
+        }
+        
+        .gender-card {
+            transition: transform 1s;
+            transform-style: preserve-3d;
+        }
+        
+        .gender-card:hover {
+            transform: rotateY(180deg);
+        }
+        
+        .gender-card-front, .gender-card-back {
+            backface-visibility: hidden;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .gender-card-back {
+            transform: rotateY(180deg);
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            opacity: 0;
+        }
+        
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Añadir transición suave */
+        .gender-card {
+            transition: transform 1s ease-in-out;
+        }
+        
+        /* Ajustes para móvil */
+        @media (max-width: 640px) {
+            .gender-reveal-container {
+                width: 56vw;
+                height: 56vw;
+                max-width: 280px;
+                max-height: 280px;
+            }
+            .gender-card-front, .gender-card-back {
+                padding: 1.5rem;
+            }
+            .gender-card img {
+                width: 24vw;
+                height: 24vw;
+                max-width: 120px;
+                max-height: 120px;
+            }
+        }
+    </style>
+</head>
+<body class="font-sans antialiased text-gray-800">
+    <audio id="musica" loop>
+        <source src="tarzan.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 bg-white bg-opacity-90 backdrop-blur-md shadow-sm transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex-shrink-0 flex items-center">
+                    <span class="text-2xl font-display font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Brandon & Laura</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-center space-x-8">
+                        <a href="#inicio" class="text-gray-700 hover:text-primary font-medium transition-colors">Inicio</a>
+                        <a href="#evento" class="text-gray-700 hover:text-primary font-medium transition-colors">El Evento</a>
+                        <a href="#countdown" class="text-gray-700 hover:text-primary font-medium transition-colors">Cuenta Regresiva</a>
+                        <a href="#dresscode" class="text-gray-700 hover:text-primary font-medium transition-colors">Dresscode</a>
+                        <a href="#galeria" class="text-gray-700 hover:text-primary font-medium transition-colors">Galería</a>
+                        <a href="#regalos" class="bg-gradient-to-r from-primary to-secondary text-white px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition-all">Detalle <i class="fa-solid fa-gift"></i></a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-gray-700 hover:text-primary focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white py-4 px-4 shadow-lg">
+            <div class="space-y-4">
+                <a href="#inicio" class="block text-gray-700 hover:text-primary">Inicio</a>
+                <a href="#evento" class="block text-gray-700 hover:text-primary">El Evento</a>
+                <a href="#countdown" class="block text-gray-700 hover:text-primary">Cuenta Regresiva</a>
+                <a href="#dresscode" class="block text-gray-700 hover:text-primary">Dresscode</a>
+                <a href="#galeria" class="block text-gray-700 hover:text-primary">Galería</a>
+                <a href="#regalos" class="block bg-gradient-to-r from-primary to-secondary text-white px-4 py-2 rounded-full text-center">Detalle <i class="fa-solid fa-gift"></i></a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="hero-gradient pt-32 pb-20 px-4 relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
+            <div class="absolute top-10 left-1/4 w-16 h-16 rounded-full bg-primary opacity-20 animate-float"></div>
+            <div class="absolute top-1/3 right-1/4 w-24 h-24 rounded-full bg-secondary opacity-20 animate-float-reverse"></div>
+            <div class="absolute bottom-1/4 left-1/3 w-20 h-20 rounded-full bg-accent opacity-20 animate-float"></div>
+            <div class="absolute bottom-10 right-1/4 w-12 h-12 rounded-full bg-primary opacity-20 animate-float-reverse"></div>
+        </div>
+        
+        <div class="max-w-6xl mx-auto relative z-10">
+            <div class="text-center" data-aos="fade-up" data-aos-duration="1000">
+                <h1 class="text-4xl md:text-6xl lg:text-7xl font-display font-bold mb-6 text-gray-800">
+                    <span class="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">¡Revelación de Género!</span>
+                </h1>
+                <p class="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto mb-10">
+                    Únete a nosotros para descubrir si nuestro bebé será niño o niña en un evento lleno de magia, amor y sorpresas.
+                </p>
+                <div class="flex justify-center space-x-4">
+                    <a href="#evento" class="bg-gradient-to-r from-primary to-secondary text-white px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+                        Ver detalles
+                    </a>
+                    <a href="#regalos" class="bg-white text-gray-800 px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 border border-gray-200">
+                        Enviar regalo
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Gender reveal animation -->
+            <div class="mt-20 flex justify-center" data-aos="zoom-in" data-aos-delay="300">
+                <div class="gender-reveal-container w-64 h-64 relative">
+                    <div id="gender-card" class="gender-card w-full h-full relative">
+                        <div class="gender-card-front bg-white rounded-2xl shadow-2xl flex flex-col items-center justify-center p-6">
+                            <img src="female.svg" alt="Niña" class="w-32 h-32 mb-4 animate-spin-slow">
+                            <span class="text-2xl font-bold text-pink-500">¿Será niña?</span>
+                        </div>
+                        <div class="gender-card-back bg-white rounded-2xl shadow-2xl flex flex-col items-center justify-center p-6">
+                            <img src="male.svg" alt="Niño" class="w-32 h-32 mb-4 animate-spin-slow">
+                            <span class="text-2xl font-bold text-cyan-500">¿O será niño?</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-16" data-aos="fade-up" data-aos-delay="500">
+                <p class="text-lg text-gray-600 mb-4">¡Confirma tu asistencia antes del 15 de junio!</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Event Details -->
+    <section id="evento" class="py-20 px-4 bg-white">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-3xl md:text-4xl font-display font-bold mb-4 text-gray-800">
+                    Detalles del <span class="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Evento</span>
+                </h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto mb-6"></div>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                    Un momento especial que queremos compartir contigo. Aquí encontrarás toda la información que necesitas.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="relative" data-aos="fade-right">
+                    <div class="absolute -inset-4 bg-gradient-to-r from-primary to-secondary rounded-2xl opacity-20 blur-lg"></div>
+                    <div class="relative bg-white rounded-2xl shadow-xl p-8 h-full">
+                        <div class="flex items-center mb-6">
+                            <div class="bg-primary bg-opacity-10 p-3 rounded-full mr-4">
+                                <i class="fas fa-calendar-day text-primary text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-gray-800">Fecha y Hora</h3>
+                                <p class="text-gray-600">21 de Junio 2025 - 3:00 PM</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center mb-6">
+                            <div class="bg-secondary bg-opacity-10 p-3 rounded-full mr-4">
+                                <i class="fas fa-map-marker-alt text-secondary text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-gray-800">Ubicación</h3>
+                                <p class="text-gray-600">Club House Condominio Alameda</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center mb-6">
+                            <div class="bg-accent bg-opacity-10 p-3 rounded-full mr-4">
+                                <i class="fa-solid fa-dice text-accent text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-gray-800">Juegos Divertidos</h3>
+                                <p class="text-gray-600">Participa en dinámicas para adivinar el género</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <div class="bg-primary bg-opacity-10 p-3 rounded-full mr-4">
+                                <i class="fas fa-gift text-primary text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-gray-800">Momento Especial</h3>
+                                <p class="text-gray-600">Prepárate para descubrir si será niña o niño</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div data-aos="fade-left" data-aos-delay="200">
+                    <div class="bg-gray-100 rounded-2xl overflow-hidden shadow-xl">
+                        <div class="relative w-full pt-[56.25%] overflow-hidden rounded-2xl">
+                            <iframe 
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3807.4686701613728!2d-66.1922576!3d-17.3892819!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x93e3756f42e7d11b%3A0x1032915bc51095c3!2sClub%20House%20Condominio%20Alameda!5e0!3m2!1ses-419!2sbo!4v1749661745352!5m2!1ses-419!2sbo" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                                class="absolute top-0 left-0 w-full h-full border-0"
+                                allowfullscreen="" 
+                                loading="lazy" 
+                                referrerpolicy="no-referrer-when-downgrade">
+                            </iframe>
+                        </div>
+                    </div>
+                    <div class="mt-6 text-center">
+                        <a href="https://maps.google.com" target="_blank" class="inline-flex items-center text-primary font-medium hover:text-primary-dark transition-colors">
+                            <i class="fas fa-directions mr-2"></i>
+                            <span>Obtener direcciones</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Countdown Section -->
+    <section id="countdown" class="py-20 px-4 bg-gradient-to-br from-primary-light to-secondary-light relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-0 left-0 w-full h-full bg-repeat" style="background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSg0NSkiPjxyZWN0IHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgZmlsbD0icmdiYSgwLDAsMCwwLjAzKSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNwYXR0ZXJuKSIvPjwvc3ZnPg==');"></div>
+        </div>
+        
+        <div class="max-w-4xl mx-auto relative z-10">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-3xl md:text-4xl font-display font-bold mb-4 text-white">
+                    Cuenta <span class="text-gray-800">Regresiva</span>
+                </h2>
+                <div class="w-24 h-1 bg-white mx-auto mb-6"></div>
+                <p class="text-lg text-gray-700 max-w-3xl mx-auto">
+                    El momento mágico está cada vez más cerca. ¡No te lo puedes perder!
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-4 gap-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="countdown-item">
+                    <span id="countdown-days" class="text-2xl font-bold text-primary">00</span>
+                    <span class="text-sm text-gray-600">Días</span>
+                </div>
+                <div class="countdown-item">
+                    <span id="countdown-hours" class="text-2xl font-bold text-primary">00</span>
+                    <span class="text-sm text-gray-600">Horas</span>
+                </div>
+                <div class="countdown-item">
+                    <span id="countdown-minutes" class="text-2xl font-bold text-primary">00</span>
+                    <span class="text-sm text-gray-600">Minutos</span>
+                </div>
+                <div class="countdown-item">
+                    <span id="countdown-seconds" class="text-2xl font-bold text-primary">00</span>
+                    <span class="text-sm text-gray-600">Segundos</span>
+                </div>
+            </div>
+            
+            <div class="mt-16 text-center" data-aos="fade-up" data-aos-delay="400">
+                <a href="#rsvp" class="bg-white text-gray-800 px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 inline-flex items-center">
+                    <i class="fas fa-check-circle mr-2 text-primary"></i>
+                    <span>Confirmar Asistencia</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dresscode Section -->
+    <section id="dresscode" class="py-20 px-4 bg-white">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-3xl md:text-4xl font-display font-bold mb-4 text-gray-800">
+                    Nuestro <span class="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Dresscode</span>
+                </h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto mb-6"></div>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                    Participa en nuestro juego de predicciones a través de tu vestuario.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div data-aos="fade-right">
+                    <div class="bg-gradient-to-br from-pink-100 to-pink-50 rounded-2xl p-8 shadow-lg relative overflow-hidden">
+                        <div class="absolute -top-10 -right-10 w-32 h-32 rounded-full bg-pink-200 opacity-30"></div>
+                        <div class="absolute -bottom-10 -left-10 w-40 h-40 rounded-full bg-pink-200 opacity-20"></div>
+                        <div class="relative z-10">
+                            <div class="flex items-center mb-6">
+                                <div class="bg-pink-100 p-3 rounded-full mr-4">
+                                    <i class="fas fa-female text-pink-500 text-xl"></i>
+                                </div>
+                                <h3 class="text-xl font-bold text-gray-800">Predicción: Niña</h3>
+                            </div>
+                            <p class="text-gray-700 mb-6">
+                                Si crees que nuestro bebé será una princesa, viste de <span class="font-bold text-pink-500">rosado</span> o tonos pastel cálidos.
+                            </p>
+                            <div class="flex space-x-4">
+                                <div class="w-12 h-12 rounded-full bg-pink-300"></div>
+                                <div class="w-12 h-12 rounded-full bg-pink-400"></div>
+                                <div class="w-12 h-12 rounded-full bg-pink-500"></div>
+                                <div class="w-12 h-12 rounded-full bg-rose-300"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div data-aos="fade-left" data-aos-delay="200">
+                    <div class="bg-gradient-to-br from-blue-100 to-blue-50 rounded-2xl p-8 shadow-lg relative overflow-hidden">
+                        <div class="absolute -top-10 -right-10 w-32 h-32 rounded-full bg-blue-200 opacity-30"></div>
+                        <div class="absolute -bottom-10 -left-10 w-40 h-40 rounded-full bg-blue-200 opacity-20"></div>
+                        <div class="relative z-10">
+                            <div class="flex items-center mb-6">
+                                <div class="bg-blue-100 p-3 rounded-full mr-4">
+                                    <i class="fas fa-male text-blue-500 text-xl"></i>
+                                </div>
+                                <h3 class="text-xl font-bold text-gray-800">Predicción: Niño</h3>
+                            </div>
+                            <p class="text-gray-700 mb-6">
+                                Si tu corazonada dice que será un príncipe, elige <span class="font-bold text-blue-500">azul</span> o tonos pastel fríos.
+                            </p>
+                            <div class="flex space-x-4">
+                                <div class="w-12 h-12 rounded-full bg-blue-300"></div>
+                                <div class="w-12 h-12 rounded-full bg-blue-400"></div>
+                                <div class="w-12 h-12 rounded-full bg-blue-500"></div>
+                                <div class="w-12 h-12 rounded-full bg-sky-300"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-16 text-center" data-aos="fade-up">
+                <p class="text-lg text-gray-600 mb-6">
+                    ¿No estás seguro? ¡No hay problema! Viste con tus colores favoritos y únete a la celebración.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="galeria" class="py-20 px-4 bg-gray-50">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-3xl md:text-4xl font-display font-bold mb-4 text-gray-800">
+                    Nuestra <span class="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Galería</span>
+                </h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto mb-6"></div>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                    Algunos momentos especiales que hemos compartido en este hermoso camino.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" data-aos="fade-up">
+                <div class="relative group overflow-hidden rounded-xl shadow-md">
+                    <img src="ecografia.png" alt="lau" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-0 group-hover:opacity-70 transition-opacity duration-300 flex items-end p-4">
+                        <p class="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">Primer contacto</p>
+                    </div>
+                </div>
+                <div class="relative group overflow-hidden rounded-xl shadow-md">
+                    <img src="laura.jpg" alt="bebe" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-0 group-hover:opacity-70 transition-opacity duration-300 flex items-end p-4">
+                        <p class="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">Esperando con amor</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+        <!-- Gift Registry -->
+    <!-- Sección de Regalos Simplificada -->
+<section id="regalos" class="py-20 px-4 bg-white">
+    <div class="max-w-4xl mx-auto">
+        <div class="text-center mb-16" data-aos="fade-up">
+            <h2 class="text-3xl md:text-4xl font-display font-bold mb-4 text-gray-800">
+                <span class="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Un Detalle Especial</span>
+            </h2>
+            <div class="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto mb-6"></div>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                Lo más importante para nosotros es que estés presente.
+                Si deseas contribuir con un obsequio, te compartimos esta alternativa que nos ayudará a preparar con amor la llegada del bebé.
+            </p>
+        </div>
+
+        <div class="generos-container">
+            <img src="biberon.svg" alt="baby elephant" class="mx-auto w-32 md:w-48 animate-bounce" />
+        </div>
+        
+        <div class="bg-gradient-to-r from-primary-light to-secondary-light rounded-2xl p-8 shadow-lg max-w-md mx-auto" data-aos="fade-up">
+            <div class="text-center">
+                <div class="mb-6">
+                    <p class="text-gray-700 mb-6">
+                        Escanea este código con tu teléfono para enviarnos un detalle especial.
+                        Cada contribución será un ladrillo en el futuro de nuestro bebé. 💕
+                    </p>
+                    <div class="inline-block bg-white p-4 rounded-lg shadow-md">
+                        <img src="qr.jpg" 
+                             alt="QR para regalos" 
+                             class="w-40 h-40 mx-auto">
+                    </div>
+                </div>
+                <p class="text-sm text-gray-600 mt-4">
+                    * Escanea el código para enviar tu regalo
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+    
+
+    <!-- Footer -->
+    <footer class="bg-gradient-to-r from-primary to-secondary text-white py-12 px-4">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <span class="text-2xl font-display font-bold">Brandon & Laura</span>
+                    <p class="mt-2 text-sm opacity-80">Revelación de género - 21 de Junio 2025</p>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="https://www.facebook.com/lauravalentina.riverosuarez" class="text-white hover:text-accent transition-colors">
+                        <i class="fab fa-facebook-f text-xl"></i>
+                    </a>
+                    <a href="https://www.instagram.com/lauravalentina_riverosuarez/" class="text-white hover:text-accent transition-colors">
+                        <i class="fab fa-instagram text-xl"></i>
+                    </a>
+                    <a href="https://wa.me/59165313554" class="text-white hover:text-accent transition-colors">
+                        <i class="fab fa-whatsapp text-xl"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="mt-12 pt-6 border-t border-white border-opacity-20 text-center text-sm opacity-80">
+                <p>Hecho con ❤️ por Brandon y Laura - ¡Esperamos verte en nuestro evento especial!</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Inicializar AOS (Animate On Scroll)
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+    const audio = document.getElementById('musica');
+
+    if (audio) {
+      const activarMusica = () => {
+        audio.play().catch((e) => {
+          console.warn("Autoplay bloqueado por el navegador:", e);
+        });
+        document.removeEventListener('scroll', );
+        document.removeEventListener('click', );
+      };
+
+      document.addEventListener('click', activarMusica);
+      document.addEventListener('scroll', activarMusica);
+    } else {
+      console.error("El elemento de audio no se encontró.");
+    }
+  });
+
+
+        // Animación automática para móviles
+        function startAutoRotation() {
+            const genderCard = document.getElementById('gender-card');
+            let isFront = true;
+            
+            // Solo activar en móviles (ancho menor a 768px)
+            if (window.innerWidth < 768) {
+                setInterval(() => {
+                    if (isFront) {
+                        genderCard.style.transform = 'rotateY(180deg)';
+                    } else {
+                        genderCard.style.transform = 'rotateY(0deg)';
+                    }
+                    isFront = !isFront;
+                }, 3000); // Cambia cada 3 segundos
+            }
+        }
+
+        // Iniciar cuando el documento esté listo
+        document.addEventListener('DOMContentLoaded', startAutoRotation);
+        
+        // También reiniciar si cambia el tamaño de pantalla
+        window.addEventListener('resize', startAutoRotation);
+
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        // Countdown timer
+        function updateCountdown() {
+            const eventDate = new Date('June 21, 2025 15:00:00').getTime();
+            const now = new Date().getTime();
+            const distance = eventDate - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('countdown-days').textContent = days.toString().padStart(2, '0');
+            document.getElementById('countdown-hours').textContent = Math.floor(hours).toString().padStart(2, '0');
+            document.getElementById('countdown-minutes').textContent = Math.floor(minutes).toString().padStart(2, '0');
+            document.getElementById('countdown-seconds').textContent = Math.floor(seconds).toString().padStart(2, '0');
+        }
+
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // Form submission
+        document.getElementById('rsvp-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('¡Gracias por confirmar tu asistencia! Nos vemos en el evento.');
+            this.reset();
+        });
+
+        // Google Maps (reemplaza con tu API key)
+        function initMap() {
+            const location = { lat: 13.6929, lng: -89.2182 }; // Coordenadas de San Salvador
+            const map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 15,
+                center: location,
+                styles: [
+                    {
+                        "featureType": "all",
+                        "elementType": "labels.text.fill",
+                        "stylers": [
+                            {"saturation": 36},
+                            {"color": "#000000"},
+                            {"lightness": 40}
+                        ]
+                    },
+                    {
+                        "featureType": "all",
+                        "elementType": "labels.text.stroke",
+                        "stylers": [
+                            {"visibility": "on"},
+                            {"color": "#000000"},
+                            {"lightness": 16}
+                        ]
+                    },
+                    {
+                        "featureType": "all",
+                        "elementType": "labels.icon",
+                        "stylers": [
+                            {"visibility": "off"}
+                        ]
+                    },
+                    {
+                        "featureType": "administrative",
+                        "elementType": "geometry.fill",
+                        "stylers": [
+                            {"color": "#000000"},
+                            {"lightness": 20}
+                        ]
+                    },
+                    {
+                        "featureType": "administrative",
+                        "elementType": "geometry.stroke",
+                        "stylers": [
+                            {"color": "#000000"},
+                            {"lightness": 17},
+                            {"weight": 1.2}
+                        ]
+                    },
+                    {
+                        "featureType": "landscape",
+                        "elementType": "geometry",
+                        "stylers": [
+                            {"color": "#f5f5f5"},
+                            {"lightness": 20}
+                        ]
+                    },
+                    {
+                        "featureType": "poi",
+                        "elementType": "geometry",
+                        "stylers": [
+                            {"color": "#ebebeb"},
+                            {"lightness": 21}
+                        ]
+                    },
+                    {
+                        "featureType": "road.highway",
+                        "elementType": "geometry.fill",
+                        "stylers": [
+                            {"color": "#ffffff"},
+                            {"lightness": 17}
+                        ]
+                    },
+                    {
+                        "featureType": "road.highway",
+                        "elementType": "geometry.stroke",
+                        "stylers": [
+                            {"color": "#ffffff"},
+                            {"lightness": 29},
+                            {"weight": 0.2}
+                        ]
+                    },
+                    {
+                        "featureType": "road.arterial",
+                        "elementType": "geometry",
+                        "stylers": [
+                            {"color": "#ffffff"},
+                            {"lightness": 18}
+                        ]
+                    },
+                    {
+                        "featureType": "road.local",
+                        "elementType": "geometry",
+                        "stylers": [
+                            {"color": "#ffffff"},
+                            {"lightness": 16}
+                        ]
+                    },
+                    {
+                        "featureType": "transit",
+                        "elementType": "geometry",
+                        "stylers": [
+                            {"color": "#f2f2f2"},
+                            {"lightness": 19}
+                        ]
+                    },
+                    {
+                        "featureType": "water",
+                        "elementType": "geometry",
+                        "stylers": [
+                            {"color": "#e9e9e9"},
+                            {"lightness": 17}
+                        ]
+                    }
+                ]
+            });
+        }
+    </script>
+</body>
+</html>

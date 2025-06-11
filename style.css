@@ -1,0 +1,133 @@
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(to bottom right, #ffe6f0, #e0f7ff);
+  color: #333;
+  overflow-x: hidden;
+}
+
+.container {
+  max-width: 800px;
+  margin: auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+header.hero {
+  font-family: 'Great Vibes', cursive;
+  font-size: 1.5rem;
+  padding: 2rem 0;
+  background: url('baby-bg.png') no-repeat center/cover;
+  color: #fff;
+  text-shadow: 1px 1px 3px #000;
+}
+
+.names {
+  font-size: 2.5rem;
+  margin-top: 0.5rem;
+}
+
+.invite-text {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.2rem;
+  margin-top: -10px;
+}
+
+.details {
+  margin-top: 2rem;
+  animation: slideUp 1.5s ease-in-out;
+}
+
+.main-message {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.highlight {
+  font-weight: bold;
+  color: #ff66a3;
+}
+
+.dresscode {
+  margin: 1rem 0;
+  font-weight: 500;
+}
+
+.pink {
+  color: #ff69b4;
+}
+
+.blue {
+  color: #00bfff;
+}
+
+.event-info {
+  background: #fff;
+  padding: 1rem;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  margin-top: 1rem;
+  line-height: 1.6;
+}
+
+.gift-section {
+  margin-top: 3rem;
+}
+
+.gift-message {
+  font-style: italic;
+  margin-bottom: 1rem;
+}
+
+.qr-box img {
+  width: 200px;
+  height: 200px;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.subtle-note {
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  color: #555;
+}
+
+footer {
+  margin-top: 3rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 1.5s ease forwards;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.slide-up {
+  animation: slideUp 2s ease forwards;
+}
+
+/* Responsivo */
+@media (max-width: 600px) {
+  .names {
+    font-size: 2rem;
+  }
+
+  .gift-message,
+  .main-message {
+    font-size: 1rem;
+  }
+
+  .event-info {
+    font-size: 0.95rem;
+  }
+}
