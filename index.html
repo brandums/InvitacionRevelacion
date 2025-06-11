@@ -104,9 +104,11 @@
             transform-style: preserve-3d;
         }
         
-        .gender-card:hover {
-            transform: rotateY(180deg);
-        }
+        @media (min-width: 768px) {
+  .gender-card:hover {
+    transform: rotateY(180deg);
+  }
+}
         
         .gender-card-front, .gender-card-back {
             backface-visibility: hidden;
