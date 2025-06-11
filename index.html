@@ -566,23 +566,33 @@
 
 
         document.addEventListener('DOMContentLoaded', () => {
-    const audio = document.getElementById('musica');
+  const audio = document.getElementById('musica');
 
-    if (audio) {
-      const activarMusica = () => {
-        audio.play().catch((e) => {
-          console.warn("Autoplay bloqueado por el navegador:", e);
-        });
-        document.removeEventListener('scroll', );
-        document.removeEventListener('click', );
-      };
+  if (audio) {
+    const activarMusica = () => {
+      audio.play().catch((e) => {
+        console.warn("Autoplay bloqueado por el navegador:", e);
+      });
 
-      document.addEventListener('click', activarMusica);
-      document.addEventListener('scroll', activarMusica);
-    } else {
-      console.error("El elemento de audio no se encontró.");
-    }
-  });
+      // Remover todos los listeners después de activar
+      document.removeEventListener('click', activarMusica);
+      document.removeEventListener('touchstart', activarMusica);
+      document.removeEventListener('pointerdown', activarMusica);
+      document.removeEventListener('mousedown', activarMusica);
+      document.removeEventListener('scroll', activarMusica);
+    };
+
+    // Escuchar múltiples tipos de interacción
+    document.addEventListener('click', activarMusica);
+    document.addEventListener('touchstart', activarMusica);   // móvil
+    document.addEventListener('pointerdown', activarMusica);  // táctil o mouse
+    document.addEventListener('mousedown', activarMusica);    // desktop
+    document.addEventListener('scroll', activarMusica);       // por si el navegador lo permite
+  } else {
+    console.error("El elemento de audio no se encontró.");
+  }
+});
+
 
 
         // Animación automática para móviles
