@@ -105,10 +105,10 @@
         }
         
         @media (min-width: 768px) {
-  .gender-card:hover {
-    transform: rotateY(180deg);
-  }
-}
+            .gender-card:hover {
+                transform: rotateY(180deg);
+            }
+        }
         
         .gender-card-front, .gender-card-back {
             backface-visibility: hidden;
@@ -624,6 +624,17 @@
         // Mobile menu toggle
         document.getElementById('mobile-menu-button').addEventListener('click', function() {
             document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const mobileMenu = document.getElementById('mobile-menu');
+            const menuLinks = mobileMenu.querySelectorAll('a');
+
+            menuLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                });
+            });
         });
 
         // Countdown timer
