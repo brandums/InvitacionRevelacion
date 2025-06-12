@@ -65,6 +65,9 @@
         html {
             scroll-behavior: smooth;
         }
+        body {
+            overflow-x: hidden;
+        }
         
         .hero-gradient {
             background: linear-gradient(135deg, rgba(242,120,159,0.1) 0%, rgba(144,205,244,0.1) 100%);
@@ -584,7 +587,7 @@
         console.warn("Autoplay bloqueado por el navegador:", e);
       });
 
-      // Remover todos los listeners después de activar
+      // Remover listeners una vez que se activó la música
       document.removeEventListener('click', activarMusica);
       document.removeEventListener('touchstart', activarMusica);
       document.removeEventListener('pointerdown', activarMusica);
@@ -592,16 +595,28 @@
       document.removeEventListener('scroll', activarMusica);
     };
 
-    // Escuchar múltiples tipos de interacción
+    // Activar la música al primer tipo de interacción
     document.addEventListener('click', activarMusica);
-    document.addEventListener('touchstart', activarMusica);   // móvil
-    document.addEventListener('pointerdown', activarMusica);  // táctil o mouse
-    document.addEventListener('mousedown', activarMusica);    // desktop
-    document.addEventListener('scroll', activarMusica);       // por si el navegador lo permite
+    document.addEventListener('touchstart', activarMusica);
+    document.addEventListener('pointerdown', activarMusica);
+    document.addEventListener('mousedown', activarMusica);
+    document.addEventListener('scroll', activarMusica);
+
+    // Escuchar cuando el navegador se minimiza o pierde foco
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        audio.pause();
+      } else {
+        // Si quieres que se reanude automáticamente al volver
+        // puedes descomentar la siguiente línea:
+        // audio.play();
+      }
+    });
   } else {
     console.error("El elemento de audio no se encontró.");
   }
 });
+
 
 
 
